@@ -1,91 +1,53 @@
-class Animal:
-    def __init__(self, name, species):
+import random
+
+class Hero:
+    def __init__(self, name, health=100, attack_power=20):
         self.name = name
-        self.species = species
+        self.health = health
+        self.attack_power = attack_power
 
-    def make_sound(self):
-        pass
+    def attack(self, other):
+        damage = self.attack_power
+        other.health -= damage
+        print(f"{self.name} атакует {other.name} и наносит {damage} урона.")
 
-class Bird(Animal):
-    def make_sound(self):
-        print(f"{self.name} sings")
+    def is_alive(self):
+        return self.health > 0
 
-class Mammal(Animal):
-    def make_sound(self):
-        print(f"{self.name} moos")
-
-class Reptile(Animal):
-    def make_sound(self):
-        print(f"{self.name} roars")
-
-class Employee:
-    def __init__(self, name, role):
-        self.name = name
-        self.role = role
-
-    def perform_duties(self):
-        pass
-
-class ZooKeeper(Employee):
-    def __init__(self, name):
-        super().__init__(name, "ZooKeeper")
-
-    def feed_animal(self, animal):
-        print(f"{self.name} кормит {animal.name}  {animal.species}")
-
-class Veterinarian(Employee):
-    def __init__(self, name):
-        super().__init__(name, "Veterinarian")
-
-    def heal_animal(self, animal):
-        print(f"{self.name} лечит {animal.name}  {animal.species}")
-
-class Zoo:
-    def __init__(self):
-        self.animals = []
-        self.employees = []
-
-    def add_animal(self, animal):
-        self.animals.append(animal)
-        print(f"Добавлено животное {animal.name},  {animal.species}, в зоопарке.")
-
-    def add_employee(self, employee):
-        self.employees.append(employee)
-        print(f"Добавлен {employee.name}, служащий {employee.role}, в зоопарке.")
-
-    def show_animals(self):
-        print("Animals in the zoo:")
-        for animal in self.animals:
-            print(f"- {animal.name} ({animal.species})")
-
-    def show_employees(self):
-        print("Employees in the zoo:")
-        for employee in self.employees:
-            print(f"- {employee.name} ({employee.role})")
+    def __str__(self):
+        return f"{self.name} (Здоровье: {self.health})"
 
 
-zoo = Zoo()
+class Game:
+    def __init__(self, player, computer):
+        self.player = player
+        self.computer = computer
+
+    def start(self):
+        print("Игра началась!")
+        while self.player.is_alive() and self.computer.is_alive():
+            # Ход игрока
+            self.player.attack(self.computer)
+            print(self.computer)
+            if not self.computer.is_alive():
+                print(f"{self.computer.name} побежден. {self.player.name} выиграл!")
+                break
+
+            # Ход компьютера
+            self.computer.attack(self.player)
+            print(self.player)
+            if not self.player.is_alive():
+                print(f"{self.player.name} побежден. {self.computer.name} выиграл!")
+                break
 
 
-sparrow = Bird("Шустряк", "sparrow")
-cow = Mammal("Бестия", "cow")
-crocodile = Reptile("Пират", "crocodile")
+if __name__ == "__main__":
+    # Создание героев
+    player_name = input("Введите имя вашего героя: ")
+    player = Hero(player_name)
+    computer = Hero("Компьютер", health=100, attack_power=random.randint(15, 25))
 
-zoo.add_animal(sparrow)
-zoo.add_animal(cow)
-zoo.add_animal(crocodile)
+    # Запуск игры
+    game = Game(player, computer)
+    game.start()
 
-
-keeper = ZooKeeper("Петрович")
-vet = Veterinarian("Dr. Пётр")
-
-zoo.add_employee(keeper)
-zoo.add_employee(vet)
-
-
-zoo.show_animals()
-zoo.show_employees()
-
-
-keeper.feed_animal(sparrow)
-vet.heal_animal(crocodile)
